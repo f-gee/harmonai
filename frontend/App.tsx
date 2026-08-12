@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 import { ThemeProvider, useTheme } from "./src/theme/ThemeContext";
@@ -39,7 +39,10 @@ function AppShell() {
             <Text style={[styles.backLabel, { color: colors.text }]}>Songs</Text>
           </Pressable>
         ) : (
-          <Text style={[styles.brand, { color: colors.text }]}>Harmonai</Text>
+          <View style={styles.brandRow}>
+            <Image source={require("./assets/icon.png")} style={styles.brandMark} />
+            <Text style={[styles.brand, { color: colors.text }]}>Harmonai</Text>
+          </View>
         )}
         <ThemeToggle />
       </View>
@@ -85,6 +88,8 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderBottomWidth: 1,
   },
+  brandRow: { flexDirection: "row", alignItems: "center", gap: 8 },
+  brandMark: { width: 26, height: 26, borderRadius: 7 },
   brand: { fontSize: 18, fontWeight: "800", letterSpacing: 0.3 },
   backButton: { flexDirection: "row", alignItems: "center", gap: 2 },
   backLabel: { fontSize: 16, fontWeight: "600" },

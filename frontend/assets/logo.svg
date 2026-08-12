@@ -1,0 +1,25 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1C1C26"/>
+      <stop offset="100%" stop-color="#0E0E14"/>
+    </linearGradient>
+    <linearGradient id="noteGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7FD9C4"/>
+      <stop offset="100%" stop-color="#7C8CFF"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="200" height="200" rx="46" fill="url(#bg)"/>
+
+  <g fill="url(#noteGrad)">
+    <!-- beam connecting the two stems -->
+    <path d="M 84 44 L 150 32 L 150 46 L 84 58 Z"/>
+    <!-- stems -->
+    <rect x="141" y="38" width="9" height="102" rx="2"/>
+    <rect x="75" y="50" width="9" height="102" rx="2"/>
+    <!-- noteheads -->
+    <ellipse cx="65" cy="156" rx="25" ry="18" transform="rotate(-16 65 156)"/>
+    <ellipse cx="131" cy="144" rx="25" ry="18" transform="rotate(-16 131 144)"/>
+  </g>
+</svg>

@@ -6,15 +6,22 @@
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "scheme": "harmonai",
+    "icon": "./assets/icon.png",
+    "backgroundColor": "#12121A",
     "web": {
-      "bundler": "metro"
+      "bundler": "metro",
+      "favicon": "./assets/favicon.png"
     },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.fgee.harmonai"
     },
     "android": {
-      "package": "com.fgee.harmonai"
+      "package": "com.fgee.harmonai",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#12121A"
+      }
     },
     "extra": {
       "apiUrl": "http://localhost:4000"

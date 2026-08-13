@@ -6,16 +6,20 @@ import { ThemeProvider, useTheme } from "./src/theme/ThemeContext";
 import { ThemeToggle } from "./src/components/ThemeToggle";
 import { HomeScreen } from "./src/screens/HomeScreen";
 import { SongScreen } from "./src/screens/SongScreen";
+import { SongEditScreen } from "./src/screens/SongEditScreen";
 import { sampleSong } from "./src/data/sampleSong";
-import { api } from "./src/lib/api";
+import { api, Song } from "./src/lib/api";
+
+type Route = { name: "home" } | { name: "song"; id: string } | { name: "edit"; song?: Song };
 
 function AppShell() {
   const { colors, mode } = useTheme();
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [remoteSong, setRemoteSong] = useState<Awaited<ReturnType<typeof api.getSong>> | null>(null);
+  const [route, setRoute] = useState<Route>({ name: "home" });
+  const [remoteSong, setRemoteSong] = useState<Song | null>(null);
+  const [homeRefreshKey, setHomeRefreshKey] = useState(0);
 
   const onSelectSong = async (id: string) => {
-    setSelectedId(id);
+    setRoute({ name: "song", id });
     if (id === "sample") {
       setRemoteSong(null);
       return;
@@ -29,12 +33,20 @@ function AppShell() {
     }
   };
 
+  const onSaved = (saved: Song) => {
+    setRemoteSong(saved);
+    setHomeRefreshKey((k) => k + 1);
+    setRoute({ name: "song", id: saved.id });
+  };
+
+  const goHome = () => setRoute({ name: "home" });
+
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
       <StatusBar style={mode === "dark" ? "light" : "dark"} />
       <View style={[styles.header, { borderColor: colors.border }]}>
-        {selectedId ? (
-          <Pressable onPress={() => setSelectedId(null)} style={styles.backButton} hitSlop={8}>
+        {route.name !== "home" ? (
+          <Pressable onPress={goHome} style={styles.backButton} hitSlop={8}>
             <Ionicons name="chevron-back" size={22} color={colors.text} />
             <Text style={[styles.backLabel, { color: colors.text }]}>Songs</Text>
           </Pressable>
@@ -47,9 +59,15 @@ function AppShell() {
         <ThemeToggle />
       </View>
 
-      {selectedId === null && <HomeScreen onSelectSong={onSelectSong} />}
+      {route.name === "home" && (
+        <HomeScreen
+          onSelectSong={onSelectSong}
+          onCreateNew={() => setRoute({ name: "edit" })}
+          refreshKey={homeRefreshKey}
+        />
+      )}
 
-      {selectedId === "sample" && (
+      {route.name === "song" && route.id === "sample" && (
         <SongScreen
           title={sampleSong.title}
           artist={sampleSong.artist}
@@ -58,12 +76,21 @@ function AppShell() {
         />
       )}
 
-      {selectedId && selectedId !== "sample" && remoteSong && (
+      {route.name === "song" && route.id !== "sample" && remoteSong && (
         <SongScreen
           title={remoteSong.title}
           artist={remoteSong.artist ?? undefined}
           originalKey={remoteSong.song_key ?? undefined}
           content={remoteSong.content}
+          onEdit={() => setRoute({ name: "edit", song: remoteSong })}
+        />
+      )}
+
+      {route.name === "edit" && (
+        <SongEditScreen
+          song={route.song}
+          onDone={onSaved}
+          onCancel={() => setRoute(route.song ? { name: "song", id: route.song.id } : { name: "home" })}
         />
       )}
     </SafeAreaView>

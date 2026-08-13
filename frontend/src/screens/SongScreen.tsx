@@ -10,9 +10,10 @@ interface SongScreenProps {
   artist?: string;
   originalKey?: string;
   content: string;
+  onEdit?: () => void;
 }
 
-export function SongScreen({ title, artist, originalKey, content }: SongScreenProps) {
+export function SongScreen({ title, artist, originalKey, content, onEdit }: SongScreenProps) {
   const { colors } = useTheme();
   const [semitones, setSemitones] = useState(0);
 
@@ -24,8 +25,19 @@ export function SongScreen({ title, artist, originalKey, content }: SongScreenPr
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
-        {artist ? <Text style={[styles.artist, { color: colors.textSecondary }]}>{artist}</Text> : null}
+        <View style={styles.headerText}>
+          <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
+          {artist ? <Text style={[styles.artist, { color: colors.textSecondary }]}>{artist}</Text> : null}
+        </View>
+        {onEdit && (
+          <Pressable
+            onPress={onEdit}
+            style={[styles.editButton, { borderColor: colors.border }]}
+            accessibilityLabel="Edit song"
+          >
+            <Ionicons name="pencil" size={16} color={colors.text} />
+          </Pressable>
+        )}
       </View>
 
       <View style={[styles.transposeRow, { borderColor: colors.border }]}>
@@ -63,9 +75,18 @@ export function SongScreen({ title, artist, originalKey, content }: SongScreenPr
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20 },
-  header: { marginBottom: 16 },
+  header: { flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 16 },
+  headerText: { flex: 1 },
   title: { fontSize: 24, fontWeight: "700" },
   artist: { fontSize: 14, marginTop: 2 },
+  editButton: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    borderWidth: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   transposeRow: {
     flexDirection: "row",
     alignItems: "center",
